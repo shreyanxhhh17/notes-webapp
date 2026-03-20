@@ -5,12 +5,7 @@ class NoteController {
     try {
       const { title, content } = req.body;
 
-      if (!title && !content) {
-        return res.status(400).json({
-          error: 'At least title or content must be provided'
-        });
-      }
-
+      // Allow empty notes - the service will provide defaults
       const note = await noteService.createNote({ title, content });
       res.status(201).json(note);
     } catch (error) {

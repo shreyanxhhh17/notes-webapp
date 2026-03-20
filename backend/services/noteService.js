@@ -1,5 +1,4 @@
 const { db } = require('../config/firebase');
-const { FieldValue } = require('firebase-admin/firestore');
 
 class NoteService {
   async createNote(noteData) {
@@ -7,16 +6,16 @@ class NoteService {
       const note = {
         title: noteData.title || 'Untitled Note',
         content: noteData.content || '',
-        createdAt: FieldValue.serverTimestamp(),
-        updatedAt: FieldValue.serverTimestamp()
+        createdAt: Date.now(),
+        updatedAt: Date.now()
       };
 
-      const docRef = await db.collection('notes').add(note);
-      const newNote = await docRef.get();
+      const newNoteRef = db.ref('notes').push();
+      await newNoteRef.set(note);
       
       return {
-        id: docRef.id,
-        ...newNote.data()
+        id: newNoteRef.key,
+        ...note
       };
     } catch (error) {
       throw new Error(`Error creating note: ${error.message}`);
@@ -25,17 +24,20 @@ class NoteService {
 
   async getAllNotes() {
     try {
-      const snapshot = await db.collection('notes')
-        .orderBy('createdAt', 'desc')
-        .get();
+      const snapshot = await db.ref('notes').once('value');
+      const notesData = snapshot.val();
       
-      const notes = [];
-      snapshot.forEach(doc => {
-        notes.push({
-          id: doc.id,
-          ...doc.data()
-        });
-      });
+      if (!notesData) {
+        return [];
+      }
+
+      const notes = Object.keys(notesData).map(key => ({
+        id: key,
+        ...notesData[key]
+      }));
+
+      // Sort by createdAt descending
+      notes.sort((a, b) => b.createdAt - a.createdAt);
 
       return notes;
     } catch (error) {
@@ -45,22 +47,25 @@ class NoteService {
 
   async updateNote(id, noteData) {
     try {
-      const updateData = {
-        ...noteData,
-        updatedAt: FieldValue.serverTimestamp()
-      };
-
-      await db.collection('notes').doc(id).update(updateData);
+      const noteRef = db.ref(`notes/${id}`);
+      const snapshot = await noteRef.once('value');
       
-      const updatedNote = await db.collection('notes').doc(id).get();
-      
-      if (!updatedNote.exists) {
+      if (!snapshot.exists()) {
         throw new Error('Note not found');
       }
 
+      const updateData = {
+        ...noteData,
+        updatedAt: Date.now()
+      };
+
+      await noteRef.update(updateData);
+      
+      const updatedSnapshot = await noteRef.once('value');
+      
       return {
-        id: updatedNote.id,
-        ...updatedNote.data()
+        id: id,
+        ...updatedSnapshot.val()
       };
     } catch (error) {
       throw new Error(`Error updating note: ${error.message}`);
@@ -69,14 +74,14 @@ class NoteService {
 
   async deleteNote(id) {
     try {
-      const noteRef = db.collection('notes').doc(id);
-      const note = await noteRef.get();
+      const noteRef = db.ref(`notes/${id}`);
+      const snapshot = await noteRef.once('value');
 
-      if (!note.exists) {
+      if (!snapshot.exists()) {
         throw new Error('Note not found');
       }
 
-      await noteRef.delete();
+      await noteRef.remove();
       return { id };
     } catch (error) {
       throw new Error(`Error deleting note: ${error.message}`);
