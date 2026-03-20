@@ -1,4 +1,4 @@
-const noteService = require('../services/noteService');
+const noteService = require("../services/noteService");
 
 class NoteController {
   async createNote(req, res) {
@@ -27,16 +27,22 @@ class NoteController {
       const { id } = req.params;
       const { title, content } = req.body;
 
-      if (!title && !content) {
+      // Allow updates where at least one field is provided
+      const updateData = {};
+      if (title !== undefined) updateData.title = title;
+      if (content !== undefined) updateData.content = content;
+
+      // Only reject if no fields are being updated
+      if (Object.keys(updateData).length === 0) {
         return res.status(400).json({
-          error: 'At least title or content must be provided'
+          error: "At least title or content must be provided",
         });
       }
 
-      const note = await noteService.updateNote(id, { title, content });
+      const note = await noteService.updateNote(id, updateData);
       res.status(200).json(note);
     } catch (error) {
-      if (error.message.includes('not found')) {
+      if (error.message.includes("not found")) {
         res.status(404).json({ error: error.message });
       } else {
         res.status(500).json({ error: error.message });
@@ -50,7 +56,7 @@ class NoteController {
       const result = await noteService.deleteNote(id);
       res.status(200).json(result);
     } catch (error) {
-      if (error.message.includes('not found')) {
+      if (error.message.includes("not found")) {
         res.status(404).json({ error: error.message });
       } else {
         res.status(500).json({ error: error.message });

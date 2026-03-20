@@ -78,6 +78,11 @@
   color: #28a745;
 }
 
+.error-indicator {
+  color: #dc3545;
+  font-weight: 600;
+}
+
 .editor-content {
   flex: 1;
   padding: 24px;
@@ -111,24 +116,24 @@
   .editor-header {
     padding: 16px 20px 12px 20px;
   }
-  
+
   .title-input {
     font-size: 20px;
   }
-  
+
   .editor-content {
     padding: 20px;
   }
-  
+
   .content-textarea {
     font-size: 15px;
     line-height: 1.5;
   }
-  
+
   .empty-editor h2 {
     font-size: 18px;
   }
-  
+
   .empty-editor p {
     font-size: 13px;
   }

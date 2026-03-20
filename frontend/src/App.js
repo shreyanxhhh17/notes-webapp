@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import './App.css';
-import Sidebar from './components/Sidebar';
-import NoteEditor from './components/NoteEditor';
-import SearchBar from './components/SearchBar';
-import { ToastProvider, useToast } from './contexts/ToastContext';
-import ToastContainer from './components/Toast/ToastContainer';
-import { noteService } from './services/noteService';
+import React, { useState, useEffect, useMemo, useCallback } from "react";
+import "./App.css";
+import Sidebar from "./components/Sidebar";
+import NoteEditor from "./components/NoteEditor";
+import SearchBar from "./components/SearchBar";
+import { ToastProvider, useToast } from "./contexts/ToastContext";
+import ToastContainer from "./components/Toast/ToastContainer";
+import { noteService } from "./services/noteService";
 
 function AppContent() {
   const [notes, setNotes] = useState([]);
   const [selectedNote, setSelectedNote] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const { showToast } = useToast();
@@ -23,8 +23,8 @@ function AppContent() {
       const data = await noteService.getAllNotes();
       setNotes(data);
     } catch (err) {
-      showToast('error', 'Failed to fetch notes');
-      console.error('Error fetching notes:', err);
+      showToast("error", "Failed to fetch notes");
+      console.error("Error fetching notes:", err);
     } finally {
       setLoading(false);
     }
@@ -38,9 +38,10 @@ function AppContent() {
     if (!searchQuery.trim()) return notes;
 
     const query = searchQuery.toLowerCase();
-    return notes.filter(note => 
-      note.title.toLowerCase().includes(query) || 
-      note.content.toLowerCase().includes(query)
+    return notes.filter(
+      (note) =>
+        note.title.toLowerCase().includes(query) ||
+        note.content.toLowerCase().includes(query),
     );
   }, [notes, searchQuery]);
 
@@ -59,42 +60,42 @@ function AppContent() {
   const handleCreateNote = async (noteData) => {
     try {
       const newNote = await noteService.createNote(noteData);
-      setNotes(prev => [newNote, ...prev]);
+      setNotes((prev) => [newNote, ...prev]);
       setSelectedNote(newNote);
-      showToast('success', 'Note created successfully');
+      showToast("success", "Note created successfully");
     } catch (err) {
-      showToast('error', 'Failed to create note');
-      console.error('Error creating note:', err);
+      showToast("error", "Failed to create note");
+      console.error("Error creating note:", err);
     }
   };
 
   const handleUpdateNote = async (id, noteData) => {
     try {
       const updatedNote = await noteService.updateNote(id, noteData);
-      setNotes(prev => prev.map(note => 
-        note.id === id ? updatedNote : note
-      ));
+      setNotes((prev) =>
+        prev.map((note) => (note.id === id ? updatedNote : note)),
+      );
       if (selectedNote && selectedNote.id === id) {
         setSelectedNote(updatedNote);
       }
-      showToast('success', 'Note updated successfully');
     } catch (err) {
-      showToast('error', 'Failed to update note');
-      console.error('Error updating note:', err);
+      showToast("error", "Failed to update note");
+      console.error("Error updating note:", err);
+      throw err; // Re-throw so NoteEditor can handle it
     }
   };
 
   const handleDeleteNote = async (id) => {
     try {
       await noteService.deleteNote(id);
-      setNotes(prev => prev.filter(note => note.id !== id));
+      setNotes((prev) => prev.filter((note) => note.id !== id));
       if (selectedNote && selectedNote.id === id) {
         setSelectedNote(null);
       }
-      showToast('success', 'Note deleted successfully');
+      showToast("success", "Note deleted successfully");
     } catch (err) {
-      showToast('error', 'Failed to delete note');
-      console.error('Error deleting note:', err);
+      showToast("error", "Failed to delete note");
+      console.error("Error deleting note:", err);
     }
   };
 
@@ -116,7 +117,7 @@ function AppContent() {
         <h1 className="app-title">Notes</h1>
         <SearchBar onSearch={handleSearch} searchQuery={searchQuery} />
       </div>
-      
+
       <div className="app-content">
         <Sidebar
           notes={paginatedNotes}
@@ -130,11 +131,8 @@ function AppContent() {
           totalPages={totalPages}
           onPageChange={handlePageChange}
         />
-        
-        <NoteEditor
-          note={selectedNote}
-          onUpdateNote={handleUpdateNote}
-        />
+
+        <NoteEditor note={selectedNote} onUpdateNote={handleUpdateNote} />
       </div>
       <ToastContainer />
     </div>
