@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./NoteEditor.css";
 
 const NoteEditor = ({ note, onUpdateNote }) => {
@@ -7,20 +7,26 @@ const NoteEditor = ({ note, onUpdateNote }) => {
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
   const [saveError, setSaveError] = useState(null);
+  const prevNoteIdRef = useRef(null);
 
   useEffect(() => {
     if (note) {
-      setTitle(note.title || "");
-      setContent(note.content || "");
-      setLastSaved(note.updatedAt || note.createdAt);
-      setSaveError(null);
+      // Only reset if we switched to a different note
+      if (prevNoteIdRef.current !== note.id) {
+        setTitle(note.title || "");
+        setContent(note.content || "");
+        setLastSaved(note.updatedAt || note.createdAt);
+        setSaveError(null);
+        prevNoteIdRef.current = note.id;
+      }
     } else {
       setTitle("");
       setContent("");
       setLastSaved(null);
       setSaveError(null);
+      prevNoteIdRef.current = null;
     }
-  }, [note]);
+  }, [note?.id]);
 
   const saveTimeoutRef = React.useRef(null);
 

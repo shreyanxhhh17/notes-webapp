@@ -75,6 +75,8 @@ function AppContent() {
       setNotes((prev) =>
         prev.map((note) => (note.id === id ? updatedNote : note)),
       );
+      // Update selectedNote only to sync server changes, but NoteEditor uses
+      // a ref to prevent resetting input fields on updates to the same note
       if (selectedNote && selectedNote.id === id) {
         setSelectedNote(updatedNote);
       }
