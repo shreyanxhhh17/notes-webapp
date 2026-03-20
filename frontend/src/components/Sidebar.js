@@ -2,19 +2,22 @@ import React, { useState } from 'react';
 import './Sidebar.css';
 
 const Sidebar = ({ 
-  notes, 
+  notes = [], 
   selectedNote, 
   onSelectNote, 
   onCreateNote, 
   onDeleteNote, 
   loading, 
   error, 
-  searchQuery,
-  currentPage,
-  totalPages,
+  searchQuery = '',
+  currentPage = 1,
+  totalPages = 1,
   onPageChange 
 }) => {
   const [isCreating, setIsCreating] = useState(false);
+  
+  // Ensure notes is always an array
+  const safeNotes = Array.isArray(notes) ? notes : [];
 
   const handleCreateNewNote = () => {
     setIsCreating(true);
@@ -164,13 +167,13 @@ const Sidebar = ({
       </div>
       
       <div className="notes-list">
-        {notes.length === 0 ? (
+        {safeNotes.length === 0 ? (
           <div className="empty-state">
             {searchQuery ? 'No notes found' : 'No notes yet. Create your first note!'}
           </div>
         ) : (
           <>
-            {notes.map(note => (
+            {safeNotes.map(note => (
               <div
                 key={note.id}
                 className={`note-item ${selectedNote?.id === note.id ? 'active' : ''}`}
