@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './Sidebar.css';
+import ConfirmDialog from './ConfirmDialog/ConfirmDialog';
+import LoadingSkeleton from './LoadingSkeleton/LoadingSkeleton';
 
 const Sidebar = ({ 
   notes = [], 
@@ -8,13 +10,13 @@ const Sidebar = ({
   onCreateNote, 
   onDeleteNote, 
   loading, 
-  error, 
   searchQuery = '',
   currentPage = 1,
   totalPages = 1,
   onPageChange 
 }) => {
   const [isCreating, setIsCreating] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState({ isOpen: false, noteId: null });
   
   // Ensure notes is always an array
   const safeNotes = Array.isArray(notes) ? notes : [];
@@ -31,9 +33,18 @@ const Sidebar = ({
 
   const handleDeleteClick = (e, noteId) => {
     e.stopPropagation();
-    if (window.confirm('Are you sure you want to delete this note?')) {
-      onDeleteNote(noteId);
+    setDeleteDialog({ isOpen: true, noteId });
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteDialog.noteId) {
+      onDeleteNote(deleteDialog.noteId);
     }
+    setDeleteDialog({ isOpen: false, noteId: null });
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteDialog({ isOpen: false, noteId: null });
   };
 
   const highlightText = (text, query) => {
@@ -137,26 +148,24 @@ const Sidebar = ({
             + New Note
           </button>
         </div>
-        <div className="loading">Loading notes...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="sidebar">
-        <div className="sidebar-header">
-          <button className="new-note-button" onClick={handleCreateNewNote}>
-            + New Note
-          </button>
-        </div>
-        <div className="error">{error}</div>
+        <LoadingSkeleton type="sidebar" />
       </div>
     );
   }
 
   return (
     <div className="sidebar">
+      <ConfirmDialog
+        isOpen={deleteDialog.isOpen}
+        title="Delete Note"
+        message="Are you sure you want to delete this note? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
+      
       <div className="sidebar-header">
         <button 
           className={`new-note-button ${isCreating ? 'creating' : ''}`}
