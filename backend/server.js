@@ -3,6 +3,11 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const admin = require("firebase-admin");
 
+// Fix OpenSSL 3.0 compatibility issue
+try {
+  require("crypto").setEngine(require("crypto").ENGINE_METHOD_ALL, "openssl-legacy-provider");
+} catch (e) {}
+
 dotenv.config();
 
 // Check if required environment variables are set
