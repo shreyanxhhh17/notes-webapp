@@ -16,7 +16,7 @@ if (process.env.NODE_ENV === "production") {
   if (missingVars.length > 0) {
     console.error(
       "⚠️  Missing required environment variables:",
-      missingVars.join(", ")
+      missingVars.join(", "),
     );
     console.warn("Server will start but Firebase operations may fail");
   }
