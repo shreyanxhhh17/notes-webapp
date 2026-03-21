@@ -69,6 +69,17 @@ app.get("/", (req, res) => {
     .json({ message: "Notes API Server is running", version: "1.0.0" });
 });
 
+// Test route to verify env variables
+app.get("/test-key", (req, res) => {
+  res.json({
+    hasKey: !!process.env.FIREBASE_PRIVATE_KEY,
+    keyLength: process.env.FIREBASE_PRIVATE_KEY?.length,
+    hasProjectId: !!process.env.FIREBASE_PROJECT_ID,
+    hasClientEmail: !!process.env.FIREBASE_CLIENT_EMAIL,
+    hasDatabaseUrl: !!process.env.FIREBASE_DATABASE_URL,
+  });
+});
+
 // Routes
 app.use("/api/notes", noteRoutes);
 
