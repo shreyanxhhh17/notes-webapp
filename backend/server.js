@@ -48,6 +48,13 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+// Request timeout middleware (10 seconds)
+app.use((req, res, next) => {
+  req.setTimeout(10000);
+  res.setTimeout(10000);
+  next();
+});
+
 // Root route
 app.get("/", (req, res) => {
   res
