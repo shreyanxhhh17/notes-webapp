@@ -3,15 +3,15 @@ const router = express.Router();
 const noteController = require('../controllers/noteController');
 
 // POST /api/notes - Create a new note
-router.post('/', noteController.createNote);
+router.post('/api/notes', noteController.createNote);
 
 // GET /api/notes - Get all notes
-router.get('/', noteController.getAllNotes);
+router.get('/api/notes', noteController.getAllNotes);
 
 // PUT /api/notes/:id - Update a note
-router.put('/:id', noteController.updateNote);
+router.put('/api/notes/:id', noteController.updateNote);
 
 // DELETE /api/notes/:id - Delete a note
-router.delete('/:id', noteController.deleteNote);
+router.delete('/api/notes/:id', noteController.deleteNote);
 
 module.exports = router;
