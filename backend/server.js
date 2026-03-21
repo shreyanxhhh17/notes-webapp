@@ -30,6 +30,11 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+// Root route
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "Notes API Server is running", version: "1.0.0" });
+});
+
 // Routes
 app.use("/api/notes", noteRoutes);
 

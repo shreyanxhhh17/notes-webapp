@@ -1,6 +1,5 @@
-// Use Firebase for production (Vercel), file storage for local development
-const isProduction =
-  process.env.NODE_ENV === "production" || process.env.VERCEL;
+// Use Firebase for production (Render/Vercel), file storage for local development
+const isProduction = process.env.NODE_ENV === "production";
 const storage = isProduction
   ? require("../config/firebaseStorage")
   : require("../config/fileStorage");
