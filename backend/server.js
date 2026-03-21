@@ -12,15 +12,14 @@ const PORT = process.env.PORT || 5000;
 const corsOptions = {
   origin: function (origin, callback) {
     const allowedOrigins = [
-      'http://localhost:3000',
-      'http://127.0.0.1:3000',
-      'https://notes-webapp-xi.vercel.app',
-      'https://notes-webapp-5cbe1zsrd-shreyanxhhh17s-projects.vercel.app'
+      "http://localhost:3000",
+      "http://127.0.0.1:3000",
+      "https://notes-webapp-xi.vercel.app",
     ];
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
@@ -32,7 +31,9 @@ app.use(express.json());
 
 // Root route
 app.get("/", (req, res) => {
-  res.status(200).json({ message: "Notes API Server is running", version: "1.0.0" });
+  res
+    .status(200)
+    .json({ message: "Notes API Server is running", version: "1.0.0" });
 });
 
 // Routes
