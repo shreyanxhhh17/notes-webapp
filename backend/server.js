@@ -69,7 +69,11 @@ app.use("/api/notes", noteRoutes);
 // 404 handler
 app.use("*", (req, res) => {
   console.log("404 - Route not found:", req.method, req.originalUrl);
-  res.status(404).json({ error: "Route not found" });
+  res.status(404).json({ 
+    error: "Route not found",
+    message: `Cannot ${req.method} ${req.originalUrl}`,
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Health check endpoint
