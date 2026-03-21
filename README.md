@@ -2,6 +2,9 @@
 
 A simple and clean notes application built with React and Node.js. This app lets you create, read, update, and delete notes with a nice user interface.
 
+<img width="1882" height="869" alt="image" src="https://github.com/user-attachments/assets/5514ae5a-b883-43a3-9e55-85a26c1b0c8f" />
+
+
 ## Features
 
 - Create new notes
