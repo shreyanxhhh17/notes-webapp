@@ -26,7 +26,7 @@ const NoteEditor = ({ note, onUpdateNote }) => {
       setSaveError(null);
       prevNoteIdRef.current = null;
     }
-  }, [note?.id]);
+  }, [note?.id, note]);
 
   const saveTimeoutRef = React.useRef(null);
 

@@ -6,9 +6,12 @@ const withTimeout = (promise, timeoutMs = 5000) => {
     promise,
     new Promise((_, reject) =>
       setTimeout(
-        () => reject(new Error(`Firebase operation timed out after ${timeoutMs}ms`)),
-        timeoutMs
-      )
+        () =>
+          reject(
+            new Error(`Firebase operation timed out after ${timeoutMs}ms`),
+          ),
+        timeoutMs,
+      ),
     ),
   ]);
 };
