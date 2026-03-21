@@ -1,9 +1,28 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const noteRoutes = require("./routes/notes");
 
 dotenv.config();
+
+// Check if required environment variables are set
+if (process.env.NODE_ENV === "production") {
+  const requiredEnvVars = [
+    "FIREBASE_PROJECT_ID",
+    "FIREBASE_CLIENT_EMAIL",
+    "FIREBASE_PRIVATE_KEY",
+    "FIREBASE_DATABASE_URL",
+  ];
+  const missingVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
+  if (missingVars.length > 0) {
+    console.error(
+      "⚠️  Missing required environment variables:",
+      missingVars.join(", ")
+    );
+    console.warn("Server will start but Firebase operations may fail");
+  }
+}
+
+const noteRoutes = require("./routes/notes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
