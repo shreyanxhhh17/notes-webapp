@@ -34,6 +34,7 @@ const corsOptions = {
       "http://localhost:3000",
       "http://127.0.0.1:3000",
       "https://notes-webapp-xi.vercel.app",
+      "https://notes-webapp-aib48m131-shreyanxhhh17s-projects.vercel.app"
     ];
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
