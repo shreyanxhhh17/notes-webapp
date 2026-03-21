@@ -14,7 +14,21 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     console.error('API Error:', error.response?.data || error.message);
+    console.error('API Error Details:', {
+      url: error.config?.url,
+      method: error.config?.method?.toUpperCase(),
+      status: error.response?.status,
+      data: error.response?.data
+    });
     return Promise.reject(error);
+  }
+);
+
+// Add debugging for API calls
+api.interceptors.request.use(
+  (config) => {
+    console.log('API Request:', config.method?.toUpperCase(), config.url);
+    return config;
   }
 );
 
