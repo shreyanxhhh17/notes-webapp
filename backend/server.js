@@ -66,16 +66,6 @@ app.get("/", (req, res) => {
 // Routes
 app.use("/api/notes", noteRoutes);
 
-// 404 handler
-app.use("*", (req, res) => {
-  console.log("404 - Route not found:", req.method, req.originalUrl);
-  res.status(404).json({ 
-    error: "Route not found",
-    message: `Cannot ${req.method} ${req.originalUrl}`,
-    timestamp: new Date().toISOString()
-  });
-});
-
 // Health check endpoint
 app.get("/health", (req, res) => {
   res.status(200).json({ 
@@ -89,6 +79,16 @@ app.get("/health", (req, res) => {
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: "Something went wrong!" });
+});
+
+// 404 handler - MUST COME AFTER ROUTES
+app.use("*", (req, res) => {
+  console.log("404 - Route not found:", req.method, req.originalUrl);
+  res.status(404).json({ 
+    error: "Route not found",
+    message: `Cannot ${req.method} ${req.originalUrl}`,
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Start server
