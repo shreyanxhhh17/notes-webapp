@@ -47,13 +47,24 @@ const NoteEditor = ({ note, onUpdateNote }) => {
       clearTimeout(saveTimeoutRef.current);
     }
 
+    // Increased debounce delay to 2.5 seconds to allow users to type more content
+    // before autosave triggers
     saveTimeoutRef.current = setTimeout(() => {
       saveNote();
-    }, 1000);
+    }, 2500);
   };
 
   const saveNote = async () => {
     if (!note) return;
+
+    // Don't autosave if both title and content are empty
+    // This prevents the "Untitled Note" issue when clearing everything
+    const titleTrimmed = title.trim();
+    const contentTrimmed = content.trim();
+
+    if (!titleTrimmed && !contentTrimmed) {
+      return;
+    }
 
     try {
       setIsSaving(true);

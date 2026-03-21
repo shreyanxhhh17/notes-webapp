@@ -37,9 +37,11 @@ class FileStorage {
     try {
       const notes = loadNotes();
       const id = Date.now().toString();
+      // Changed: Allow empty titles instead of defaulting to "Untitled Note"
+      // This prevents the "U" character issue when autosaving incomplete notes
       const note = {
-        title: noteData.title || "Untitled Note",
-        content: noteData.content || "",
+        title: noteData.title !== undefined ? noteData.title : "",
+        content: noteData.content !== undefined ? noteData.content : "",
         createdAt: Date.now(),
         updatedAt: Date.now(),
       };
