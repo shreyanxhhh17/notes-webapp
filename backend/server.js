@@ -66,6 +66,12 @@ app.get("/", (req, res) => {
 // Routes
 app.use("/api/notes", noteRoutes);
 
+// 404 handler
+app.use("*", (req, res) => {
+  console.log("404 - Route not found:", req.method, req.originalUrl);
+  res.status(404).json({ error: "Route not found" });
+});
+
 // Health check endpoint
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "OK", timestamp: new Date().toISOString() });
